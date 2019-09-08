@@ -44,5 +44,8 @@ public class Kudo {
 		this.texto = texto;
 	}
 	
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 }
