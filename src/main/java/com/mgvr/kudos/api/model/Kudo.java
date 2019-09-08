@@ -1,16 +1,24 @@
 package com.mgvr.kudos.api.model;
 
+
+
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Document(collection= "kudo")
 public class Kudo {
 	
 	@Id
 	private long id;
+	private String identificador;
 	private String fuente;
 	private String destino;
-	private String fecha;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyyy")
+	private Date fecha;
 	private String lugar;
 	private String texto;
 	public String getFuente() {
@@ -25,10 +33,10 @@ public class Kudo {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-	public String getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(String fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 	public String getLugar() {
@@ -46,6 +54,12 @@ public class Kudo {
 	
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public String getIdentificador() {
+		return identificador;
+	}
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
 	}
 	
 }
