@@ -2,6 +2,7 @@ package com.mgvr.kudos.api.dao;
 
 import java.util.List;
 
+import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.DbFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -43,9 +44,9 @@ public class KudoDao {
 			mongoTemplate.save(seq);
 		} else {
 			Query query = new Query();
-			query.addCriteria(Criteria.where("id").is("1"));
+			query.addCriteria(Criteria.where(DbFields.ID).is("1"));
 			Update update = new Update();
-			update.set("seq", seq.getSeq()+1);
+			update.set(DbFields.SEQ, seq.getSeq()+1);
 			mongoTemplate.updateFirst(query, update,DatabaseSequence.class );
 		}
 		
@@ -54,13 +55,13 @@ public class KudoDao {
 
 	public void deleteKudoByFrom(String from){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("fuente").is(from));
+		query.addCriteria(Criteria.where(DbFields.FUENTE).is(from));
 		mongoTemplate.remove(query, Kudo.class);
 	}
 
 	public void deleteKudoByTo(String to){
 		Query query = new Query();
-		query.addCriteria(Criteria.where("destino").is(to));
+		query.addCriteria(Criteria.where(DbFields.DESTINO).is(to));
 		mongoTemplate.remove(query, Kudo.class);
 	}
 }
