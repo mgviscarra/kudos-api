@@ -15,15 +15,22 @@ import com.mgvr.kudos.api.messaging.Receiver;
 @Configuration
 public class RabbitMqConfig {
 	public static final String EXCHANGE_NAME = RabbitmqExchangeName.EXCHANGE_NAME;
+
     public static final String KUDO_RPC_KUDO_API_ROUTING_KEY = RabbitmqRoutingKeys.KUDO_RPC_KUDO_API;
- 
     public static final String KUDO_RPC_KUDO_API_QUEUE_NAME = RabbitmqQueueNames.KUDO_RPC_KUDO_API;
+
+    public static final String KUDO_RPC_KUDO_DELETE_REQUEST_ROUTING_KEY= RabbitmqRoutingKeys.KUDO_RPC_KUDO_DELETE_REQUEST;
+    public static final String KUDO_RPC_KUDO_DELETE_REQUEST_QUEUE_NAME=RabbitmqQueueNames.KUDO_RPC_KUDO_DELETE_REQUEST;
+
     private static final boolean IS_DURABLE_QUEUE = false;
  
     @Bean
     Queue kudoApiQueue() {
         return new Queue(KUDO_RPC_KUDO_API_QUEUE_NAME, IS_DURABLE_QUEUE);
     }
+
+    @Bean
+    Queue kudoDeleteRequest(){return new Queue(KUDO_RPC_KUDO_DELETE_REQUEST_QUEUE_NAME, IS_DURABLE_QUEUE);}
  
     @Bean
     DirectExchange exchange() {
@@ -35,6 +42,10 @@ public class RabbitMqConfig {
         return BindingBuilder.bind(kudoApiQueue).to(exchange).with(KUDO_RPC_KUDO_API_ROUTING_KEY);
     }
 
+    @Bean
+    Binding kudoDeleteRequestBibding(Queue kudoDeleteRequest, DirectExchange exchange){
+        return BindingBuilder.bind(kudoDeleteRequest).to(exchange).with(KUDO_RPC_KUDO_DELETE_REQUEST_ROUTING_KEY);
+    }
 
     @Bean
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
@@ -52,5 +63,4 @@ public class RabbitMqConfig {
     Receiver receiver() {
         return new Receiver();
     }
-
 }

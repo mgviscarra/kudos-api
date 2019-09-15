@@ -51,4 +51,16 @@ public class KudoDao {
 		
 		return seq.getSeq();
     }
+
+	public void deleteKudoByFrom(String from){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("fuente").is(from));
+		mongoTemplate.remove(query, Kudo.class);
+	}
+
+	public void deleteKudoByTo(String to){
+		Query query = new Query();
+		query.addCriteria(Criteria.where("destino").is(to));
+		mongoTemplate.remove(query, Kudo.class);
+	}
 }
