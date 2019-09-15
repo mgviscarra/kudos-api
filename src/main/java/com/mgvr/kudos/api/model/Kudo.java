@@ -14,7 +14,6 @@ public class Kudo {
 	
 	@Id
 	private long id;
-	private String identificador;
 	private String fuente;
 	private String destino;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyyy")
@@ -50,16 +49,12 @@ public class Kudo {
 	}
 	public void setTexto(String texto) {
 		this.texto = texto;
-	}
-	
+	}	
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getIdentificador() {
-		return identificador;
-	}
-	public void setIdentificador(String identificador) {
-		this.identificador = identificador;
+	public Long getId() {
+		return id;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.mgvr.kudos.api.messaging;
 
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class Sender {
     private RabbitTemplate rabbitTemplate;
     public void sendMessage(String message) {
     	 System.out.println("[Application] Enviando el mensaje \"" + message + "\"...");
-         rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, message);
+         //rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE_NAME, RabbitMqConfig.ROUTING_KEY, message);
     }
 
 }

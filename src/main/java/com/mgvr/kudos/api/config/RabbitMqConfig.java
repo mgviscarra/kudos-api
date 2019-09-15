@@ -1,9 +1,12 @@
 package com.mgvr.kudos.api.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqExchangeName;
+import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqQueueNames;
+import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqRoutingKeys;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,25 +14,38 @@ import com.mgvr.kudos.api.messaging.Receiver;
 
 @Configuration
 public class RabbitMqConfig {
-	public static final String EXCHANGE_NAME = "test";
-    public static final String ROUTING_KEY = "test";
+	public static final String EXCHANGE_NAME = RabbitmqExchangeName.EXCHANGE_NAME;
+    public static final String KUDO_RPC_KUDO_API_ROUTING_KEY = RabbitmqRoutingKeys.KUDO_RPC_KUDO_API;
  
-    public static final String QUEUE_NAME = "test";
+    public static final String KUDO_RPC_KUDO_API_QUEUE_NAME = RabbitmqQueueNames.KUDO_RPC_KUDO_API;
     private static final boolean IS_DURABLE_QUEUE = false;
  
     @Bean
-    Queue queue() {
-        return new Queue(QUEUE_NAME, IS_DURABLE_QUEUE);
+    Queue kudoApiQueue() {
+        return new Queue(KUDO_RPC_KUDO_API_QUEUE_NAME, IS_DURABLE_QUEUE);
     }
  
     @Bean
-    TopicExchange exchange() {
-        return new TopicExchange(EXCHANGE_NAME);
+    DirectExchange exchange() {
+        return new DirectExchange(EXCHANGE_NAME);
     }
  
     @Bean
-    Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
+    Binding kudoApiBinding(Queue kudoApiQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(kudoApiQueue).to(exchange).with(KUDO_RPC_KUDO_API_ROUTING_KEY);
+    }
+
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
+        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
+        return rabbitTemplate;
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
  
     @Bean

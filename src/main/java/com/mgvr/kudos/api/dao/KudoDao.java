@@ -15,7 +15,6 @@ import com.mgvr.kudos.api.model.Kudo;
 @Repository
 public class KudoDao {
 	@Autowired
-	//private KudoRepository kudoRepository;
 	private MongoTemplate mongoTemplate;
 	
 	public List<Kudo> getAllkudos() {
@@ -31,7 +30,6 @@ public class KudoDao {
 	public void createKudo(Kudo kudo) {
 		long seq = getNextSequence();
 		kudo.setId(seq);
-		kudo.setIdentificador(Long.toString(seq));
 		mongoTemplate.save(kudo);
 	}
 	
