@@ -5,4 +5,5 @@ public class DbFields {
     public static final String ID = "id";
     public static final String FUENTE = "fuente";
     public static final String DESTINO = "destino";
+    public static final String FECHA = "fecha";
 }

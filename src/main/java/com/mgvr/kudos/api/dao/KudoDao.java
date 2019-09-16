@@ -64,4 +64,11 @@ public class KudoDao {
 		query.addCriteria(Criteria.where(DbFields.DESTINO).is(to));
 		mongoTemplate.remove(query, Kudo.class);
 	}
+
+	public List<Kudo> getKudosByRealName(String realName){
+		Query query = new Query();
+		query.addCriteria(Criteria.where(DbFields.DESTINO).is(realName));
+		List<Kudo> kudos = mongoTemplate.find(query, Kudo.class);
+		return kudos;
+	}
 }

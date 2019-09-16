@@ -16,10 +16,18 @@ public class Kudo {
 	private long id;
 	private String fuente;
 	private String destino;
+	private String tema;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyyy")
 	private Date fecha;
 	private String lugar;
 	private String texto;
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Long getId() {
+		return id;
+	}
 	public String getFuente() {
 		return fuente;
 	}
@@ -32,29 +40,17 @@ public class Kudo {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
-	public Date getFecha() {
-		return fecha;
-	}
+	public String getTema(){return tema;}
+	public void setTema(String tema){this.tema=tema;}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
-	}
-	public String getLugar() {
-		return lugar;
 	}
 	public void setLugar(String lugar) {
 		this.lugar = lugar;
 	}
-	public String getTexto() {
-		return texto;
-	}
 	public void setTexto(String texto) {
 		this.texto = texto;
 	}	
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public Long getId() {
-		return id;
-	}
+
 	
 }

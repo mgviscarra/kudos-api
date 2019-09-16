@@ -3,14 +3,16 @@ package com.mgvr.kudos.api.controller;
 import java.io.IOException;
 import java.util.List;
 
-import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.ApiMessages;
-import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.KudosApiRoutes;
-import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqExchangeName;
-import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqRoutingKeys;
+import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.*;
 import com.mgvr.kudos.api.model.User;
+import com.monitorjbl.json.JsonResult;
+import com.monitorjbl.json.JsonView;
+import com.monitorjbl.json.Match;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +40,7 @@ public class KudoController {
 	private DirectExchange exchange;
 	
 	@PostMapping(KudosApiRoutes.POST_KUDO)
-	public String saveKudo(@RequestBody Kudo kudo) throws IOException {
+	public ResponseEntity<String> saveKudo(@RequestBody Kudo kudo) throws IOException {
 		User userFrom = new User();
 		userFrom.setRealName(kudo.getFuente());
 		User userTo  = new User();
@@ -48,18 +50,24 @@ public class KudoController {
 		String responseUserTo =  (String)rabbitTemplate.convertSendAndReceive
 				(RabbitmqExchangeName.EXCHANGE_NAME, RabbitmqRoutingKeys.KUDO_RPC_USER_REQUEST, userTo);
 		if(responseUserFrom==null || responseUserTo==null){
-			return ApiMessages.USERS_DONT_EXIST;
+			return new ResponseEntity<>(ApiMessages.USERS_DONT_EXIST, HttpStatus.CONFLICT);
 		}
 		dao.createKudo(kudo);
-		return ApiMessages.CREATED;
+		return new ResponseEntity<>(ApiMessages.CREATED, HttpStatus.OK);
 	}
 	@DeleteMapping(KudosApiRoutes.DELETE_KUDO)
-	public String deleteKudo(@PathVariable String id) {
+	public ResponseEntity<String> deleteKudo(@PathVariable String id) {
 		dao.deleteKudo(Long.parseLong(id));
-		return ApiMessages.DELETED;
+		return new ResponseEntity<>(ApiMessages.DELETED, HttpStatus.OK);
 	}
 	@GetMapping(KudosApiRoutes.GET_KUDOS)
-	public List<Kudo> getKudos(){
-		return dao.getAllkudos();
+	public ResponseEntity<List<Kudo>> getKudos(){
+		List<Kudo> kudos = dao.getAllkudos();
+		JsonResult json = JsonResult.instance();
+		List<Kudo> listKudos= json.use(JsonView.with(kudos)
+				.onClass(User.class, Match.match()
+						.exclude(DbFields.FECHA)
+				)).returnValue();
+		return new ResponseEntity<>(listKudos, HttpStatus.OK);
 	}
 }

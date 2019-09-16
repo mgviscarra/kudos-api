@@ -22,6 +22,9 @@ public class RabbitMqConfig {
     public static final String KUDO_RPC_KUDO_DELETE_REQUEST_ROUTING_KEY= RabbitmqRoutingKeys.KUDO_RPC_KUDO_DELETE_REQUEST;
     public static final String KUDO_RPC_KUDO_DELETE_REQUEST_QUEUE_NAME=RabbitmqQueueNames.KUDO_RPC_KUDO_DELETE_REQUEST;
 
+    public static final String KUDO_RPC_GET_KUDO_FOR_USER_REQUEST_ROUTING_KEY = RabbitmqRoutingKeys.KUDO_RPC_GET_KUDO_FOR_USER_REQUEST;
+    public static final String KUDO_RPC_GET_KUDO_FOR_USER_REQUEST_QUEUE_NAME = RabbitmqQueueNames.KUDO_RPC_GET_KUDO_FOR_USER_REQUEST;
+
     private static final boolean IS_DURABLE_QUEUE = false;
  
     @Bean
@@ -31,6 +34,9 @@ public class RabbitMqConfig {
 
     @Bean
     Queue kudoDeleteRequest(){return new Queue(KUDO_RPC_KUDO_DELETE_REQUEST_QUEUE_NAME, IS_DURABLE_QUEUE);}
+
+    @Bean
+    Queue kudoForUserRequest(){return new Queue(KUDO_RPC_GET_KUDO_FOR_USER_REQUEST_QUEUE_NAME, IS_DURABLE_QUEUE);}
  
     @Bean
     DirectExchange exchange() {
@@ -45,6 +51,11 @@ public class RabbitMqConfig {
     @Bean
     Binding kudoDeleteRequestBibding(Queue kudoDeleteRequest, DirectExchange exchange){
         return BindingBuilder.bind(kudoDeleteRequest).to(exchange).with(KUDO_RPC_KUDO_DELETE_REQUEST_ROUTING_KEY);
+    }
+
+    @Bean
+    Binding kudoForUserRequestBinding(Queue kudoForUserRequest, DirectExchange exchange){
+        return BindingBuilder.bind(kudoForUserRequest).to(exchange).with(KUDO_RPC_GET_KUDO_FOR_USER_REQUEST_ROUTING_KEY);
     }
 
     @Bean
