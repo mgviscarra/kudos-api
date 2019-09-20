@@ -3,6 +3,7 @@ package com.mgvr.kudos.api.config;
 import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqExchangeName;
 import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqQueueNames;
 import com.mgvr.kudos.api.com.mgvr.kudos.api.constants.RabbitmqRoutingKeys;
+import com.mgvr.kudos.api.messaging.Sender;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -62,6 +63,7 @@ public class RabbitMqConfig {
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
+        rabbitTemplate.setReplyTimeout(600000);
         return rabbitTemplate;
     }
 
@@ -73,5 +75,10 @@ public class RabbitMqConfig {
     @Bean
     Receiver receiver() {
         return new Receiver();
+    }
+
+    @Bean
+    Sender sender() {
+        return new Sender();
     }
 }

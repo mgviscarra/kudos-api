@@ -71,4 +71,11 @@ public class KudoDao {
 		List<Kudo> kudos = mongoTemplate.find(query, Kudo.class);
 		return kudos;
 	}
+
+	public List<Kudo> getKudosByFrom(String from){
+		Query query = new Query();
+		query.addCriteria(Criteria.where(DbFields.FUENTE).is(from));
+		List<Kudo> kudos = mongoTemplate.find(query,Kudo.class);
+		return kudos;
+	}
 }

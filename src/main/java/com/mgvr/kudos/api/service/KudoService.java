@@ -41,7 +41,7 @@ public class KudoService {
             return false;
         }
         dao.createKudo(kudo);
-        sender.sendMessage(RabbitmqExchangeName.EXCHANGE_NAME, RabbitmqRoutingKeys.KUDO_RPC_STATS_API,kudo);
+        sender.sendMessage(RabbitmqExchangeName.EXCHANGE_NAME, RabbitmqRoutingKeys.KUDO_RPC_STATS_API_UPDATE_KUDO_ROUTING_KEY,kudo.getDestino());
         return true;
     }
 
@@ -57,5 +57,19 @@ public class KudoService {
                         .exclude(DbFields.FECHA)
                 )).returnValue();
         return listKudos;
+    }
+
+    public void deleteKudoByFrom(String from){
+        List<Kudo> kudosFrom = dao.getKudosByFrom(from);
+        dao.deleteKudoByFrom(from);
+        sender.sendMessage(RabbitmqExchangeName.EXCHANGE_NAME, RabbitmqRoutingKeys.KUDO_RPC_STATS_API_UPDATE_KUDOS_ROUTING_KEY,kudosFrom);
+    }
+
+    public void deleteKudoByTo(String to){
+        dao.deleteKudoByTo(to);
+    }
+
+    public List<Kudo> getKudosByRealName(String realName){
+        return dao.getKudosByRealName(realName);
     }
 }
