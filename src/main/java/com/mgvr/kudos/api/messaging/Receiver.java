@@ -30,6 +30,7 @@ public class Receiver {
         dao.deleteKudoByTo(message.getRealName());
         return ApiMessages.DELETED;
     }
+
     @RabbitListener(queues = RabbitmqQueueNames.KUDO_RPC_GET_KUDO_FOR_USER_REQUEST)
     @SendTo(RabbitmqQueueNames.KUDO_RPC_USER_API)
     public String receiveKudoForUserRequest(User message) throws JsonProcessingException {
