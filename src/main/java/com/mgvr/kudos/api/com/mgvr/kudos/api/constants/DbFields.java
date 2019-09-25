@@ -6,6 +6,4 @@ public class DbFields {
     public static final String FUENTE = "fuente";
     public static final String DESTINO = "destino";
     public static final String FECHA = "fecha";
-    public static final String TEMA = "tema";
-    public static final String TEXTO = "texto";
 }

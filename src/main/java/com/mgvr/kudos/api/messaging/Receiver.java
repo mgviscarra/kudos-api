@@ -25,18 +25,18 @@ public class Receiver {
     @RabbitListener(queues = RabbitmqQueueNames.KUDO_RPC_KUDO_DELETE_REQUEST)
     @SendTo(RabbitmqQueueNames.KUDO_RPC_USER_API)
     public String receiveKudoDeleteRequest(User message){
-        System.out.println("Recibiendo mensaje: "+message.getNickName());
-        kudoService.deleteKudoByFrom(message.getNickName());
-        kudoService.deleteKudoByTo(message.getNickName());
+        System.out.println("Recibiendo mensaje: "+message.getRealName());
+        kudoService.deleteKudoByFrom(message.getRealName());
+        kudoService.deleteKudoByTo(message.getRealName());
         return ApiMessages.DELETED;
     }
 
     @RabbitListener(queues = RabbitmqQueueNames.KUDO_RPC_GET_KUDO_FOR_USER_REQUEST)
     @SendTo(RabbitmqQueueNames.KUDO_RPC_USER_API)
     public String receiveKudoForUserRequest(User message) throws JsonProcessingException {
-        System.out.println("Recibiendo mensaje: "+message.getNickName());
-        //List<Kudo> kudos = dao.getKudosByNickName(message.getRealName());
-        List<Kudo> kudos = kudoService.getKudosByNickName(message.getNickName());
+        System.out.println("Recibiendo mensaje: "+message.getRealName());
+        //List<Kudo> kudos = dao.getKudosByRealName(message.getRealName());
+        List<Kudo> kudos = kudoService.getKudosByRealName(message.getRealName());
         if(kudos.size()==0){
             return null;
         }
